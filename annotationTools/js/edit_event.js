@@ -97,9 +97,11 @@ function StopEditEvent() {
 
   // If the annotation is not deleted or we are in "view deleted" mode, 
   // then attach the annotation to the main_canvas:
-  if(!anno.GetDeleted()||view_Deleted) {
+  if(!anno.GetDeleted() || view_Deleted) {
     main_canvas.AttachAnnotation(anno);
-    anno.RenderAnnotation('rest');
+    if(!anno.hidden) {
+      anno.RenderAnnotation('rest');
+    }
   }
 
   // Render the object list:
@@ -132,6 +134,9 @@ function AdjustPolygonButton() {
 
   // Remove polygon from canvas:
   $('#'+anno.polygon_id).remove();
+
+  // Set to polygon drawing mode:
+  SetDrawingMode(0);
 
   // Create adjust event:
   var adjust_event = new AdjustEvent('select_canvas',anno.pts_x,anno.pts_y,LMgetObjectField(LM_xml,anno.anno_id,'name'),function(x,y,_editedControlPoints) {
